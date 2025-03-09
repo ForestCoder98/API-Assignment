@@ -10,6 +10,11 @@ const GAME_API = "https://spacescavanger.onrender.com/";
       const startResponse = await fetch(startUrl);
       const startData = await startResponse.json();
       console.log("Challenge started:", startData);
+
+const sunResponse = await fetch(`${SOLAR_API}bodies/soleil`);
+      const sunData = await sunResponse.json();
+      console.log("sun data:", sunData);
+
     }catch (error) {
         console.error("Error:", error);
       }
