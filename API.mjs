@@ -11,7 +11,9 @@ const GAME_API = "https://spacescavanger.onrender.com/";
       const startData = await startResponse.json();
       console.log("Challenge started:", startData);
 
-const sunResponse = await fetch(`${SOLAR_API}bodies/soleil`);
+      //Task 1:
+
+const sunResponse = await fetch(`${SOLAR_API}bodies/sun`);
       const sunData = await sunResponse.json();
       console.log("sun data:", sunData);
 
@@ -27,6 +29,8 @@ const sunResponse = await fetch(`${SOLAR_API}bodies/soleil`);
 
       const answerData = await answerResponse.json();
         console.log("Answer response:", answerData);
+
+      //Task 2:
 
         const earthResponse = await fetch(`${SOLAR_API}bodies/earth`);
     const earthData = await earthResponse.json();
@@ -56,9 +60,55 @@ const sunResponse = await fetch(`${SOLAR_API}bodies/soleil`);
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ answer: closestPlanet.englishName, player: playerId }),
     });
-
+    
     const answerData2 = await answerResponse2.json();
     console.log("Answer response:", answerData2);
+
+    //Task 3:
+
+    let shortestDayPlanet = null;
+    let shortestDay = Infinity;
+
+    allBodiesData.bodies.forEach((body) => {
+      if (body.isPlanet && typeof body.sideralRotation === "number") {
+        let shortestPossibleDay = Math.abs(body.sideralRotation)
+        if (shortestPossibleDay < shortestDay) {
+          shortestDay = shortestPossibleDay;
+          shortestDayPlanet = body.englishName;
+        }
+      }
+    });
+
+    console.log("shortest day planet:", shortestDayPlanet);
+
+    const answerResponse3 = await fetch(`${GAME_API}answer`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answer: shortestDayPlanet, player: playerId }),
+    });
+
+    const answerData3 = await answerResponse3.json();
+    console.log("Answer response:", answerData3);
+
+    //Task 4:
+
+    const jupiterResponse = await fetch(`${SOLAR_API}bodies/jupiter`);
+    const jupiterData = await jupiterResponse.json();
+    const jupiterMoonCount = jupiterData.moons.length;
+
+    console.log("Jupiter's moons: ", jupiterMoonCount);
+
+    const answerResponse4 = await fetch(`${GAME_API}answer`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answer: jupiterMoonCount, player: playerId }),
+    });
+    const answerData4 = await answerResponse4.json();
+    console.log("Answer response:", answerData4);
+
+    //Task 5:
+
+    
 
     }catch (error) {
         console.error("Error:", error);
