@@ -108,7 +108,32 @@ const sunResponse = await fetch(`${SOLAR_API}bodies/sun`);
 
     //Task 5:
 
-    
+    let biggestMoonName = null;
+    let biggestMoon = 0;
+
+    const jupiterMoonsData = jupiterData.moons;
+
+    for (const moon of jupiterMoonsData) {
+      const response = await fetch(moon.rel);
+      const data = await response.json();
+
+      if (data.aroundPlanet && typeof data.meanRadius === "number") {
+        let sizeMoonMax = Math.abs(data.meanRadius);
+        if (sizeMoonMax > biggestMoon) {
+          biggestMoon = sizeMoonMax;
+          biggestMoonName = data.englishName;
+        }
+      }
+    }
+    console.log("largest moon: ", biggestMoonName);
+
+    const answerResponse5 = await fetch(`${GAME_API}answer`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answer: biggestMoonName, player: playerId }),
+    });
+    const answerData5 = await answerResponse5.json();
+    console.log("Answer response:", answerData5);
 
     }catch (error) {
         console.error("Error:", error);
