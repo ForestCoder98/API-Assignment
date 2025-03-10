@@ -135,6 +135,22 @@ const sunResponse = await fetch(`${SOLAR_API}bodies/sun`);
     const answerData5 = await answerResponse5.json();
     console.log("Answer response:", answerData5);
 
+    //Task 6:
+
+    const plutoResponse = await fetch(`${SOLAR_API}bodies/pluto`);
+    const plutoData = await plutoResponse.json();
+    const plutoClassification = plutoData.bodyType;
+
+    console.log("Pluto's Body Type: ", plutoClassification);
+
+    const answerResponse6 = await fetch(`${GAME_API}answer`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answer: plutoClassification, player: playerId }),
+    });
+    const answerData6 = await answerResponse6.json();
+    console.log("Answer response:", answerData6);
+
     }catch (error) {
         console.error("Error:", error);
       }
