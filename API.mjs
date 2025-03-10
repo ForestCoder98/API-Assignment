@@ -28,6 +28,38 @@ const sunResponse = await fetch(`${SOLAR_API}bodies/soleil`);
       const answerData = await answerResponse.json();
         console.log("Answer response:", answerData);
 
+        const earthResponse = await fetch(`${SOLAR_API}bodies/earth`);
+    const earthData = await earthResponse.json();
+    const earthAxialTilt = earthData.axialTilt;
+    console.log("Earth's axial tilt:", earthAxialTilt);
+
+    const allBodiesResponse = await fetch(`${SOLAR_API}bodies/`);
+    const allBodiesData = await allBodiesResponse.json();
+
+    let closestPlanet = null;
+    let smallestDifference = Infinity;
+
+    allBodiesData.bodies.forEach(body => {
+        if (body.isPlanet && body.axialTilt !== undefined && body.axialTilt != earthAxialTilt) {
+            let difference = Math.abs(body.axialTilt - earthAxialTilt);
+            if (difference < smallestDifference) {
+                smallestDifference = difference;
+                closestPlanet = body;
+            }
+        }
+    });
+
+    console.log("Closest planet:", closestPlanet.englishName);
+
+    const answerResponse2 = await fetch(`${GAME_API}answer`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answer: closestPlanet.englishName, player: playerId }),
+    });
+
+    const answerData2 = await answerResponse2.json();
+    console.log("Answer response:", answerData2);
+
     }catch (error) {
         console.error("Error:", error);
       }
